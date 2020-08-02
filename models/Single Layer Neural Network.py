@@ -69,3 +69,6 @@ class MLP():
             for j in range(self.nh):
                 sum_o += self.ah[j] * self.wo[j][k]
             self.ao[k] = sigmoid(sum_o)
+
+
+        #
