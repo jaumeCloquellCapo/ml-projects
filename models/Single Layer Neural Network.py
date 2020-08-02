@@ -12,6 +12,25 @@ def dsigmoid(y):
 
 
 class MLP():
+    """
+    A class used to represent out Neural Networks with 2 Layers (Input and hidden)
+
+    ...
+
+    Attributes
+    ----------
+    ni : int
+        input nodes
+    nh : int
+        hidden nodes
+    no : int
+        output nodes
+
+    Methods
+    -------
+    activation(inputs)
+        Mult. the input values with the heights and apply sigmoid function
+    """
 
     def __init__(self, ni, nh, no):
         # number of input, hidden, and output nodes
