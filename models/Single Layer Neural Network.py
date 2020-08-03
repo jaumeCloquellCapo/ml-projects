@@ -10,10 +10,13 @@ def sigmoid(x):
 def dsigmoid(y):
     return y - y ** 2
 
+def cost_derivative (output_activations , y):
+    return output_activations - y
 
-class MLP():
+
+class MLP:
     """
-    A class used to represent out Neural Networks with 2 Layers (Input and hidden)
+    A class used to represent multiple single neurons to a multi-layer feedforward neural network; this special type of network is also called a multi-layer perceptron (MLP).
 
     ...
 
@@ -53,7 +56,7 @@ class MLP():
 
     def activation(self, inputs):
 
-        for i in range(self.ni-1):
+        for i in range(self.ni - 1):
             self.ai[i] = inputs[i]
 
         # hidden activations
@@ -70,5 +73,40 @@ class MLP():
                 sum_o += self.ah[j] * self.wo[j][k]
             self.ao[k] = sigmoid(sum_o)
 
+        return self.ao[:]
 
-        #
+    def backPropagate(self, targets, N, M):
+        """ Update the network ’s weights and biases by applying gradient descent using
+        backpropagation"""
+        output_deltas = np.zeros(self.no)
+        for i in range(self.no):
+            #error = targets[i] - self.co[i]
+            error = cost_derivative(targets[i], self.co[i])
+            output_deltas[i] = dsigmoid(self.ao[i]) * error
+
+        hidden_deltas = np.zeros(self.nh)
+        for j in range(self.nh):
+            error = 0.0
+            for k in range(self.no):
+                error += output_deltas[k] * self.wo[j][k]
+            hidden_deltas[i] = dsigmoid(self.nh[i]) * error
+
+        # update output weights
+        for j in range(self.nh):
+            for k in range(self.no):
+                change = output_deltas[k] * self.ah[j]
+                self.wo[j][k] += N * change + M * self.co[j][k]
+            self.co[j][k] = change
+
+        # update input weights
+        for i in range(self.ni):
+            for j in range(self.nh):
+                change = hidden_deltas[j] * self.ai[i]
+                self.wi[i][j] += N * change + M * self.ci[i][j]
+            self.ci[i][j] = change
+
+        # calculate error
+        error = 0.0
+        for k in range(len(targets)):
+            error += 0.5 * (targets[k] - self.ao[k]) ** 2
+        return error
