@@ -80,7 +80,6 @@ class MLP:
         backpropagation"""
         output_deltas = np.zeros(self.no)
         for i in range(self.no):
-            #error = targets[i] - self.co[i]
             error = cost_derivative(targets[i], self.co[i])
             output_deltas[i] = dsigmoid(self.ao[i]) * error
 
